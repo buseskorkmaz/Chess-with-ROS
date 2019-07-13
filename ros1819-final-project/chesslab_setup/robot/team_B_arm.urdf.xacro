@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://ros.org/wiki/xacro" name="team_B_arm">
+
+	<xacro:include filename="$(find ur_description)/urdf/ur3.urdf.xacro" />
+
+	<link name="world" />
+
+	<joint name="team_B_calibration_joint" type="fixed">
+		<parent link="world" />
+		<child link="team_B_base_link" />
+		<origin xyz="-0.37 0.0 -0.04" rpy="0.0 0.0 -1.5708" />
+	</joint>
+	<xacro:ur3_robot prefix="team_B_" joint_limited="true" precise_collision="false" />
+
+	<gazebo>
+		<plugin name="team_B_arm_hwiface" filename="libgazebo_ros_control.so">
+			<robotNamespace>team_B_arm</robotNamespace>
+		</plugin>
+	</gazebo>
+</robot>

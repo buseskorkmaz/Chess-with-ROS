@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<launch>
+	<include file="$(find chesslab_setup)/launch/dashboard.launch.xml">
+		<arg name="cameras_enabled" default="true" />
+		<arg name="team_B_enabled" value="true" />
+
+		<arg name="load_sim" value="true" />
+	</include>
+</launch>

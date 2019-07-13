@@ -1,0 +1,5 @@
+float32[] conf
+---
+bool incollision
+int32 obj
+string msg

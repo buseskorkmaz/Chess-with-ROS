@@ -1,0 +1,219 @@
+<?xml version="1.0"?>
+<launch>
+	<!-- choose whether to visualize -->
+	<arg name="show_rviz" default="false" />
+	<arg name="joint_gui" default="false" />
+
+	<!-- choose which set of components to launch -->
+	<arg name="cameras_enabled" default="false" />
+	<arg name="team_A_enabled" default="false" />
+	<arg name="team_B_enabled" default="false" />
+
+	<!-- switch between real and simulated.. or simply display -->
+	<arg name="load_real" default="false" />
+	<arg name="load_sim" default="false" />
+
+	<!-- load additional services -->
+	<arg name="load_cam_calib" default="false" />
+	<arg name="load_services" default="false" />
+
+s
+	<!-- rviz configured with minimim visualization -->
+	<group if="$(arg show_rviz)">
+		<node name="chess_rviz" pkg="rviz" type="rviz" respawn="true" args="-d $(find chesslab_setup)/config/chesslab_setup.rviz" output="screen"/>
+	</group>
+
+	<!-- load all controllers configurations -->
+	<rosparam file="$(find chesslab_setup)/config/controllers.yaml" command="load"/>
+
+	<!-- TEAM A LAUNCH -->
+	<group if="$(arg team_A_enabled)" ns="team_A_arm">
+		<param name="robot_description" command="$(find xacro)/xacro $(find chesslab_setup)/robot/team_A_arm.urdf.xacro" />
+
+		<group if="$(arg joint_gui)">
+			<node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher">
+				<param name="use_gui" value="$(arg joint_gui)"/>
+			</node>
+		</group>
+
+		<param name="publish_frequency" value="100"/>
+		<node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
+
+		<!-- arm controllers -->
+		<group unless="$(arg joint_gui)">
+			<node name="load_and_start_controller" pkg="controller_manager" type="spawner" respawn="false" output="screen" args="joint_state_controller joint_trajectory_controller" />
+		</group>
+
+		<!-- arm hwiface -->
+		<group if="$(arg load_real)">
+			<node name="ur_hardware_interface" pkg="ur_modern_driver" type="ur_driver" output="screen">
+				<param name="robot_ip_address" type="str" value="192.168.1.10" />
+				<param name="reverse_port" value="50001" />
+				<param name="min_payload" type="double" value="0.0"/>
+				<param name="max_payload" type="double" value="3.0"/>
+				<param name="max_velocity" type="double" value="10.0"/>
+				<param name="use_ros_control" type="bool" value="True"/>
+				<param name="servoj_gain" type="double" value="750" />
+				<param name="prefix" value="team_A" />
+				<param name="base_frame" type="str" value="team_A_base_link"/>
+				<param name="tool_frame" type="str" value="team_A_tool0_controller"/>
+			</node>
+		</group>
+		<group unless="$(arg joint_gui)">
+			<node name="team_A_arm_gui" pkg="rqt_gui" type="rqt_gui" respawn="false" args="perspective-file $(find chesslab_setup)/config/team_A.perspective" output="screen" />
+		</group>
+	</group>
+	<group if="$(arg team_A_enabled)" ns="team_A_gripper">
+		<param name="robot_description" command="$(find xacro)/xacro $(find chesslab_setup)/robot/team_A_gripper.urdf.xacro" />
+
+		<group if="$(arg joint_gui)">
+			<node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher">
+				<param name="use_gui" value="$(arg joint_gui)"/>
+			</node>
+		</group>
+
+		<param name="publish_frequency" value="100"/>
+		<node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
+
+		<!-- gripper controllers -->
+		<group unless="$(arg joint_gui)">
+			<node name="load_and_start_controller" pkg="controller_manager" type="spawner" respawn="false" output="screen" args="joint_state_controller gripper_controller" />
+		</group>
+
+		<!-- gripper hwiface -->
+		<group if="$(arg load_real)">
+			<node name="gripper_hardware_interface" pkg="robotiq_2f_hw_usb" type="robotiq_2f_hw_usb_node" respawn="false" output="screen">
+				<param name="port" type="str" value="/dev/ttyUSB0" />
+				<param name="server_id" type="int" value="9" />
+				<param name="name" type="str" value="team_A_gripper" />
+			</node>
+		</group>
+	</group>
+
+	<!-- TEAM B LAUNCH -->
+	<group if="$(arg team_B_enabled)" ns="team_B_arm">
+		<param name="robot_description" command="$(find xacro)/xacro $(find chesslab_setup)/robot/team_B_arm.urdf.xacro" />
+
+		<group if="$(arg joint_gui)">
+			<node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher">
+				<param name="use_gui" value="$(arg joint_gui)"/>
+			</node>
+		</group>
+
+		<param name="publish_frequency" value="100"/>
+		<node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
+
+		<!-- arm controllers -->
+		<group unless="$(arg joint_gui)">
+			<node name="load_and_start_controller" pkg="controller_manager" type="spawner" respawn="false" output="screen" args="joint_state_controller joint_trajectory_controller" />
+		</group>
+
+		<!-- arm hwiface -->
+		<group if="$(arg load_real)">
+			<node name="ur_hardware_interface" pkg="ur_modern_driver" type="ur_driver" output="screen">
+				<param name="robot_ip_address" type="str" value="192.168.1.20" />
+				<param name="reverse_port" value="50002" />
+				<param name="min_payload" type="double" value="0.0"/>
+				<param name="max_payload" type="double" value="3.0"/>
+				<param name="max_velocity" type="double" value="10.0"/>
+				<param name="use_ros_control" type="bool" value="True"/>
+				<param name="servoj_gain" type="double" value="750" />
+				<param name="prefix" value="team_B" />
+				<param name="base_frame" type="str" value="team_B_base_link"/>
+				<param name="tool_frame" type="str" value="team_B_tool0_controller"/>
+			</node>
+		</group>
+		<group unless="$(arg joint_gui)">
+			<node name="team_B_arm_gui" pkg="rqt_gui" type="rqt_gui" respawn="false" args="perspective-file $(find chesslab_setup)/config/team_B.perspective" output="screen" />
+		</group>
+	</group>
+
+	<group if="$(arg team_B_enabled)" ns="team_B_gripper">
+		<param name="robot_description" command="$(find xacro)/xacro $(find chesslab_setup)/robot/team_B_gripper.urdf.xacro" />
+
+		<group if="$(arg joint_gui)">
+			<node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher">
+				<param name="use_gui" value="$(arg joint_gui)"/>
+			</node>
+		</group>
+
+		<param name="publish_frequency" value="100"/>
+		<node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
+
+		<!-- gripper controllers -->
+		<group unless="$(arg joint_gui)">
+			<node name="load_and_start_controller" pkg="controller_manager" type="spawner" respawn="false" output="screen" args="joint_state_controller gripper_controller" />
+		</group>
+
+		<!-- gripper hwiface -->
+		<group if="$(arg load_real)">
+			<node name="gripper_hardware_interface" pkg="robotiq_2f_hw_usb" type="robotiq_2f_hw_usb_node" respawn="false" output="screen">
+				<param name="port" type="str" value="/dev/ttyUSB0" />
+				<param name="server_id" type="int" value="9" />
+				<param name="name" type="str" value="team_B_gripper" />
+			</node>
+		</group>
+	</group>
+
+	<!-- this is just to make the cameras float in gazebo
+		we add a virtual frame with a different name from world -->
+
+	<group if="$(arg cameras_enabled)">
+		<node pkg="tf2_ros" type="static_transform_publisher" name="chess_frame_broadcaster" args="0.0 0.0 0.0  0.0 0.0 0.0 world chess_frame" />
+		<group ns="camera_right">
+			<param name="robot_description" command="$(find xacro)/xacro $(find chesslab_setup)/robot/camera_right.urdf.xacro" />
+
+			<param name="publish_frequency" value="100"/>
+			<node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
+		</group>
+		<group ns="camera_left">
+			<param name="robot_description" command="$(find xacro)/xacro $(find chesslab_setup)/robot/camera_left.urdf.xacro" />
+
+			<param name="publish_frequency" value="100"/>
+			<node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
+		</group>
+	</group>
+
+	<!-- always launches the image rectification, calibration and real cameras only if enabled -->
+	<group if="$(arg cameras_enabled)">
+		<include file="$(find realsense_lab)/launch/two_realsense_calibration.launch.xml">
+			<arg name="load_calib" value="$(arg load_cam_calib)" />
+			<arg name="real" value="$(arg load_real)" />
+			<arg name="load_rviz" value="false" />
+		</include>
+	</group>
+
+	<!-- configuration of the simulation -->
+	<group if="$(arg load_sim)">
+
+		<group if="$(arg team_A_enabled)">
+			<node name="spawn_team_A_arm_model" pkg="gazebo_ros" type="spawn_model" args="-urdf -param /team_A_arm/robot_description -model team_A_arm" respawn="false" output="screen" />
+			<node name="spawn_team_A_gripper_model" pkg="gazebo_ros" type="spawn_model" args="-urdf -param /team_A_gripper/robot_description -model team_A_gripper -y 1.0 -z -0.5" respawn="false" output="screen" />
+		</group>
+
+		<group if="$(arg team_B_enabled)">
+			<node name="spawn_team_B_arm_model" pkg="gazebo_ros" type="spawn_model" args="-urdf -param /team_B_arm/robot_description -model team_B_arm" respawn="false" output="screen" />
+			<node name="spawn_team_B_gripper_model" pkg="gazebo_ros" type="spawn_model" args="-urdf -param /team_B_gripper/robot_description -model team_B_gripper -y -1.0 -z -0.5" respawn="false" output="screen" />
+		</group>
+
+		<group if="$(arg cameras_enabled)">
+			<node name="spawn_camera_model_right" pkg="gazebo_ros" type="spawn_model" args="-urdf -param camera_right/robot_description -model camera_right" respawn="false" output="screen" />
+			<node name="spawn_camera_model_left" pkg="gazebo_ros" type="spawn_model" args="-urdf -param camera_left/robot_description -model camera_left" respawn="false" output="screen" />
+		</group>
+
+		<include file="$(find gazebo_ros)/launch/empty_world.launch">
+			<arg name="world_name" value="$(find chesslab_setup)/worlds/chesslab.world"/>
+			<arg name="paused" value="false" />
+			<arg name="gui" value="true" />
+		</include>
+
+	</group>
+
+	<!-- services -->
+	<group if="$(arg load_services)">
+		<node name="node" pkg="chesslab_setup" type="node" output="screen" />
+		<node name="kautham_node" pkg="kautham" type="kautham-rosnode" launch-prefix="xterm -e" />
+		<node name="ur3ik_server" pkg="ur3ik" type="urik-node" />
+		<node pkg="ff" name="ff_node_service" type="ff_node_service" respawn="true" />
+	</group>
+</launch>

@@ -1,0 +1,27 @@
+image: ros:melodic-ros-base
+
+pipelines:
+  default:
+    - step:
+        script:
+          - apt-get upgrade
+          - apt-get update
+          - apt-get -y install apt-utils apt-transport-https libsasl2-dev ntp software-properties-common
+          # realsense dependencies
+          - apt-key adv --keyserver keys.gnupg.net --recv-key C8B3A55A6F3EFCDE || apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-key C8B3A55A6F3EFCDE
+          - add-apt-repository "deb http://realsense-hw-public.s3.amazonaws.com/Debian/apt-repo bionic main"
+          - apt-get install -y librealsense2-dkms librealsense2-utils librealsense2-dev librealsense2-dbg
+          # gripper dependencies
+          - apt-get install -y libmodbus-dev
+          # ros-ff dependencies
+          - apt-get install -y bison flex
+          # kautham dependencies
+          - apt-key adv --keyserver pgp.mit.edu --recv-keys 63DE76AC0B6779BF
+          - add-apt-repository ppa:deb-rob/ros-bionic
+          - apt-get update
+          - apt-get install -y libompl-dev libsoqt520-dev libcoin-dev cmake libboost-system-dev libboost-serialization-dev libboost-thread-dev libfcl-dev libassimp-dev  libarmadillo-dev libode-dev libpugixml-dev libeigen3-dev   freeglut3-dev
+          - git clone https://gitlab.com/beta-robots/ros_gitlab_ci.git
+          - /bin/bash -c "source ros_gitlab_ci/gitlab-ros.bash"
+          - cd .. && ls -l
+          - cd && ls -l
+          - cd ../../ && ls -l

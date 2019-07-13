@@ -1,0 +1,9 @@
+int16 objarucoid
+string posit
+---
+int16 objkauthamid
+int16 objArucoID
+geometry_msgs/Pose pos
+string posit
+bool found
+bool free

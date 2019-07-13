@@ -1,0 +1,128 @@
+## TEAM A CONFIG
+
+team_A_arm:
+  hardware_control_loop:
+     loop_hz: 125
+
+  hardware_interface:
+     joints:
+       - team_A_shoulder_pan_joint
+       - team_A_shoulder_lift_joint
+       - team_A_elbow_joint
+       - team_A_wrist_1_joint
+       - team_A_wrist_2_joint
+       - team_A_wrist_3_joint
+
+  joint_state_controller:
+     type:         joint_state_controller/JointStateController
+     publish_rate: 125
+
+  joint_trajectory_controller:
+    type: position_controllers/JointTrajectoryController
+    joints:
+        - team_A_shoulder_pan_joint
+        - team_A_shoulder_lift_joint
+        - team_A_elbow_joint
+        - team_A_wrist_1_joint
+        - team_A_wrist_2_joint
+        - team_A_wrist_3_joint
+
+  joint_velocity_controller:
+    type: velocity_controllers/JointGroupVelocityController
+    joints:
+       - team_A_shoulder_pan_joint
+       - team_A_shoulder_lift_joint
+       - team_A_elbow_joint
+       - team_A_wrist_1_joint
+       - team_A_wrist_2_joint
+       - team_A_wrist_3_joint
+
+  # gazebo_ros_control:
+  #   pid_gains:
+  #     team_A_shoulder_pan_joint: {p: 50.0, i: 0.0, d: 0.0}
+  #     team_A_shoulder_lift_joint: {p: 50.0, i: 0.0, d: 0.0}
+  #     team_A_elbow_joint: {p: 50.0, i: 0.0, d: 0.0}
+  #     team_A_wrist_1_joint: {p: 50.0, i: 0.0, d: 0.0}
+  #     team_A_wrist_2_joint: {p: 50.0, i: 0.0, d: 0.0}
+  #     team_A_wrist_3_joint: {p: 50.0, i: 0.0, d: 0.0}
+
+team_A_gripper:
+  joint_state_controller:
+    type: joint_state_controller/JointStateController
+    publish_rate: 100
+
+  gripper_controller:
+    type: position_controllers/GripperActionController
+    joint: team_A_gripper_right_driver_joint
+    stall_timeout: 0.1
+    stall_velocity_threshold: 0.1
+    goal_tolerance: 0.01
+
+  # gazebo_ros_control:
+  #   pid_gains:
+  #     team_A_gripper_right_driver_joint: {p: 50.0, i: 0.0, d: 0.0}
+
+
+## TEAM B CONFIG
+
+team_B_arm:
+  hardware_control_loop:
+     loop_hz: 125
+
+  hardware_interface:
+     joints:
+       - team_B_shoulder_pan_joint
+       - team_B_shoulder_lift_joint
+       - team_B_elbow_joint
+       - team_B_wrist_1_joint
+       - team_B_wrist_2_joint
+       - team_B_wrist_3_joint
+
+  joint_state_controller:
+     type:         joint_state_controller/JointStateController
+     publish_rate: 125
+
+  joint_trajectory_controller:
+    type: position_controllers/JointTrajectoryController
+    joints:
+        - team_B_shoulder_pan_joint
+        - team_B_shoulder_lift_joint
+        - team_B_elbow_joint
+        - team_B_wrist_1_joint
+        - team_B_wrist_2_joint
+        - team_B_wrist_3_joint
+
+  joint_velocity_controller:
+    type: velocity_controllers/JointGroupVelocityController
+    joints:
+       - team_B_shoulder_pan_joint
+       - team_B_shoulder_lift_joint
+       - team_B_elbow_joint
+       - team_B_wrist_1_joint
+       - team_B_wrist_2_joint
+       - team_B_wrist_3_joint
+
+  # gazebo_ros_control:
+  #   pid_gains:
+  #     team_B_shoulder_pan_joint: {p: 50.0, i: 0.0, d: 0.0}
+  #     team_B_shoulder_lift_joint: {p: 50.0, i: 0.0, d: 0.0}
+  #     team_B_elbow_joint: {p: 50.0, i: 0.0, d: 0.0}
+  #     team_B_wrist_1_joint: {p: 50.0, i: 0.0, d: 0.0}
+  #     team_B_wrist_2_joint: {p: 50.0, i: 0.0, d: 0.0}
+  #     team_B_wrist_3_joint: {p: 50.0, i: 0.0, d: 0.0}
+
+team_B_gripper:
+  joint_state_controller:
+    type: joint_state_controller/JointStateController
+    publish_rate: 100
+
+  gripper_controller:
+    type: position_controllers/GripperActionController
+    joint: team_B_gripper_right_driver_joint
+    stall_timeout: 0.1
+    stall_velocity_threshold: 0.1
+    goal_tolerance: 0.01
+
+  # gazebo_ros_control:
+  #   pid_gains:
+  #     team_B_gripper_right_driver_joint: {p: 50.0, i: 0.0, d: 0.0}

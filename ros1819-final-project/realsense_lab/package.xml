@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>realsense_lab</name>
+  <version>0.0.0</version>
+  <description>realsense_aruco test package</description>
+
+  <maintainer email="jan@todo.todo">jan</maintainer>
+
+  <license>TODO</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <build_depend>realsense2_camera</build_depend>
+  <build_depend>roscpp</build_depend>
+  <build_depend>aruco_ros</build_depend>
+  <build_depend>std_srvs</build_depend>
+
+  <build_export_depend>realsense2_camera</build_export_depend>
+  <build_export_depend>roscpp</build_export_depend>
+
+  <exec_depend>realsense2_camera</exec_depend>
+  <exec_depend>roscpp</exec_depend>
+  <exec_depend>aruco_ros</exec_depend>
+
+  <export>
+  </export>
+</package>

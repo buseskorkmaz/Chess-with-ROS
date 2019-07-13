@@ -1,0 +1,144 @@
+<?xml version="1.0" ?>
+<launch>
+
+	<arg name="load_calib"			default="true" />
+	<arg name="real"			default="false"/>
+	<arg name="load_rviz"			default="false"/>
+
+	<arg name="camera1"			default="camera_left"/>	<!-- Note: Replace with camera name -->
+	<arg name="camera2"			default="camera_right"/>	<!-- Note: Replace with camera name -->
+	<arg name="serial_no_camera1"		default="821312061541"/> 	<!-- Note: Replace with actual serial number -->
+	<arg name="serial_no_camera2"		default="821212062071"/> 	<!-- Note: Replace with actual serial number -->
+
+	<arg name="tf_prefix_camera1"		default="$(arg camera1)"/>
+	<arg name="tf_prefix_camera2"		default="$(arg camera2)"/>
+	<arg name="initial_reset"		default="false"/>
+
+	<!-- INITIAL GUESS measured by tape -->
+	<!-- node name="aruco_100_broadcaster" pkg="tf2_ros" type="static_transform_publisher"  args="0.216 0 -0.216   0 0 1.5708 world camera_left_aruco_100 " / -->
+	<!-- node name="aruco_102_broadcaster" pkg="tf2_ros" type="static_transform_publisher"  args="0.216 0 0.216   0 0 -1.5708  camera_left_aruco_102 world" / -->
+	<!-- node name="aruco_101_broadcaster" pkg="tf2_ros" type="static_transform_publisher"  args="0.216 0 0.216   0 0 1.5708  world camera_right_aruco_101 " / -->
+	<!-- node name="aruco_103_broadcaster" pkg="tf2_ros" type="static_transform_publisher"  args="0.216 0 -0.216   0 0 -1.5708  camera_right_aruco_103 world" / -->
+
+	<!--  CAMERA 1 with rectification -->
+	<group ns="$(arg camera1)">
+	   	<group if="$(arg real)">
+		    <include file="$(find realsense2_camera)/launch/includes/nodelet.launch.xml">
+			<arg name="serial_no"           value="$(arg serial_no_camera1)"/>
+			<arg name="tf_prefix"           value="$(arg tf_prefix_camera1)"/>
+			<arg name="initial_reset"       value="$(arg initial_reset)"/>
+			<!-- arg name="color_width"		value="1920" />
+			<arg name="color_height"	value="1080" / -->
+			<arg name="enable_fisheye"      value="false"/>
+			<arg name="enable_depth"        value="false"/>
+			<arg name="enable_color"        value="true"/>
+			<arg name="enable_infra1"       value="false"/>
+			<arg name="enable_infra2"       value="false"/>
+			<arg name="enable_gyro"         value="false"/>
+			<arg name="enable_accel"        value="false"/>
+		   </include>
+		</group>
+
+		<!-- this is always launched -->
+		<node ns="color" name="image_proc_$(arg camera1)" pkg="image_proc" type="image_proc" />
+
+		<group if="$(arg load_calib)">
+			<include file="$(find realsense_lab)/launch/aruco_single.launch.xml">
+				<arg name="node_name"       value="aruco_single_100"/>
+				<arg name="markerId"        value="100"/>
+				<arg name="markerSize"      value="0.03"/>
+				<arg name="marker_frame"    value="$(arg camera1)_aruco_100"/>
+				<!-- arg name="reference_frame" value="world"/ -->
+				<arg name="camera_info"     value="/$(arg camera1)/color/camera_info"/>
+				<arg name="image"           value="/$(arg camera1)/color/image_rect_color"/>
+				<arg name="camera_frame"    value="$(arg camera1)_color_optical_frame"/>
+			</include>
+			<include file="$(find realsense_lab)/launch/aruco_single.launch.xml">
+				<arg name="node_name"       value="aruco_single_102"/>
+				<arg name="markerId"        value="102"/>
+				<arg name="markerSize"      value="0.03"/>
+				<arg name="marker_frame"    value="$(arg camera1)_aruco_102"/>
+				<!-- arg name="reference_frame" value="world"/ -->
+				<arg name="camera_info"     value="/$(arg camera1)/color/camera_info"/>
+				<arg name="image"           value="/$(arg camera1)/color/image_rect_color"/>
+				<arg name="camera_frame"    value="$(arg camera1)_color_optical_frame"/>
+			</include>
+			<include file="$(find realsense_lab)/launch/aruco_single.launch.xml">
+				<arg name="node_name"       value="aruco_single_302"/>
+				<arg name="markerId"        value="302"/>
+				<arg name="markerSize"      value="0.03"/>
+				<arg name="marker_frame"    value="$(arg camera1)_aruco_302"/>
+				<arg name="reference_frame" value="world"/>
+				<arg name="camera_info"     value="/$(arg camera1)/color/camera_info"/>
+				<arg name="image"           value="/$(arg camera1)/color/image_rect_color"/>
+				<arg name="camera_frame"    value="$(arg camera1)_color_optical_frame"/>
+			</include>
+		</group>
+	</group>
+
+	<!--  CAMERA 2 with rectification -->
+	<group ns="$(arg camera2)">
+	   	<group if="$(arg real)">
+		   <include file="$(find realsense2_camera)/launch/includes/nodelet.launch.xml">
+			<arg name="serial_no"          value="$(arg serial_no_camera2)"/>
+			<arg name="tf_prefix"	     value="$(arg tf_prefix_camera2)"/>
+			<arg name="initial_reset"      value="$(arg initial_reset)"/>
+			<!-- arg name="color_width"		value="1920" />
+			<arg name="color_height"	value="1080" / -->
+			<arg name="enable_fisheye"     value="false"/>
+			<arg name="enable_depth"       value="false"/>
+			<arg name="enable_color"       value="true"/>
+			<arg name="enable_infra1"      value="false"/>
+			<arg name="enable_infra2"      value="false"/>
+			<arg name="enable_gyro"        value="false"/>
+			<arg name="enable_accel"       value="false"/>
+		   </include>
+		</group>
+
+		<!-- this is always launched -->
+		<node ns="color" name="image_proc_$(arg camera2)" pkg="image_proc" type="image_proc" />
+
+		<group if="$(arg load_calib)">
+			<include file="$(find realsense_lab)/launch/aruco_single.launch.xml">
+				<arg name="node_name"       value="aruco_single_101"/>
+				<arg name="markerId"        value="101"/>
+				<arg name="markerSize"      value="0.03"/>
+				<arg name="marker_frame"    value="$(arg camera2)_aruco_101"/>
+				<!-- arg name="reference_frame" value="world"/ -->
+				<arg name="camera_info"     value="/$(arg camera2)/color/camera_info"/>
+				<arg name="image"           value="/$(arg camera2)/color/image_rect_color"/>
+				<arg name="camera_frame"    value="$(arg camera2)_color_optical_frame"/>
+			</include>
+			<include file="$(find realsense_lab)/launch/aruco_single.launch.xml">
+				<arg name="node_name"       value="aruco_single_103"/>
+				<arg name="markerId"        value="103"/>
+				<arg name="markerSize"      value="0.03"/>
+				<arg name="marker_frame"    value="$(arg camera2)_aruco_103"/>
+				<!-- arg name="reference_frame" value="world"/ -->
+				<arg name="camera_info"     value="/$(arg camera2)/color/camera_info"/>
+				<arg name="image"           value="/$(arg camera2)/color/image_rect_color"/>
+				<arg name="camera_frame"    value="$(arg camera2)_color_optical_frame"/>
+			</include>
+			<include file="$(find realsense_lab)/launch/aruco_single.launch.xml">
+				<arg name="node_name"       value="aruco_single_302"/>
+				<arg name="markerId"        value="302"/>
+				<arg name="markerSize"      value="0.03"/>
+				<arg name="marker_frame"    value="$(arg camera2)_aruco_302"/>
+				<arg name="reference_frame" value="world"/>
+				<arg name="camera_info"     value="/$(arg camera2)/color/camera_info"/>
+				<arg name="image"           value="/$(arg camera2)/color/image_rect_color"/>
+				<arg name="camera_frame"    value="$(arg camera2)_color_optical_frame"/>
+			</include>
+		</group>
+	</group>
+
+	<!--  Ad-hoc camera calibrator -->
+	<group if="$(arg load_calib)">
+		<node name="cameras_calibrator" pkg="realsense_lab" type="cameras_calibration" output="screen" />
+	</group>
+
+	<!-- RViz   -->
+	<group if="$(arg load_rviz)">
+		<node name="markers_rviz" pkg="rviz" type="rviz" args="-d $(find realsense_lab)/config/two_realsense_aruco.rviz"/>
+	</group>
+</launch>

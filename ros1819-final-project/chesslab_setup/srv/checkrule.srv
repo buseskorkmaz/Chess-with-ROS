@@ -1,0 +1,5 @@
+int16 id
+string goal_pos
+string initial_pos
+---
+bool check

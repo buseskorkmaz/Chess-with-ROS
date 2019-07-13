@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<launch>
+    <arg 
+        name="domain" 
+        default="block_world.pddl"
+    />
+    <arg 
+        name="problem" 
+        default="block_world"
+    />
+    <node 
+        pkg="ff" 
+        name="ff_node" 
+        type="ff_node" 
+        args="-o $(find ff)/ff-domains/$(arg domain) -f $(find ff)/ff-domains/$(arg problem)" 
+        output="screen"
+    />
+    
+    <!-- <node pkg="ff" name="ff_node" type="ff_node" args="-o $(find ff)/ff-domains/block_world.pddl -f $(find ff)/ff-domains/block_world" output="screen"/> -->
+
+
+</launch>

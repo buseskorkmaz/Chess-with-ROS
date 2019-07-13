@@ -1,0 +1,5 @@
+geometry_msgs/Pose pose
+---
+iksol[] ik_solution
+bool status
+

@@ -1,0 +1,3 @@
+int16 objid
+geometry_msgs/Pose p
+---

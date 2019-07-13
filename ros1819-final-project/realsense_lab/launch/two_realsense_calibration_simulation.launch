@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<launch>
+	<include file="$(find realsense_lab)/launch/two_realsense_calibration.launch.xml">
+		<arg name="real" value="false" />
+	</include>
+</launch>

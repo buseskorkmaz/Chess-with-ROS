@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://ros.org/wiki/xacro" name="team_A_gripper">
+
+	<xacro:include filename="$(find robotiq_2f_model)/model/robotiq_2f_85.urdf.xacro" />
+	<xacro:include filename="$(find robotiq_2f_model)/model/robotiq_ur_coupler.urdf.xacro" />
+
+	<link name="team_A_tool0" />
+
+	<xacro:robotiq_ur_coupler name="team_A_coupler_link" parent="team_A_tool0" />
+
+	<xacro:robotiq_2f_85 name="team_A_gripper" with_pads="true" parent="team_A_coupler_link" precise_collision="false" adaptive_transmission="false">
+		<origin xyz="0 0 0" rpy="0 0 ${0.5*pi}" />
+	</xacro:robotiq_2f_85>
+
+	<gazebo>
+		<plugin name="team_A_gripper_hwiface" filename="libgazebo_ros_control.so">
+			<robotNamespace>team_A_gripper</robotNamespace>
+		</plugin>
+	</gazebo>
+
+	<gazebo reference="team_A_gripper_right_pad">
+		<kp>10000.0</kp>
+		<kd>1.0</kd>
+		<mu1>0.8</mu1>
+		<mu2>0.8</mu2>
+		<minDepth>0.001</minDepth>
+	</gazebo>
+	<gazebo reference="team_A_gripper_left_pad">
+		<kp>10000.0</kp>
+		<kd>1.0</kd>
+		<mu1>0.8</mu1>
+		<mu2>0.8</mu2>
+		<minDepth>0.001</minDepth>
+	</gazebo>
+</robot>

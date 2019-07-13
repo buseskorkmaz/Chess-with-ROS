@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<launch>
+
+    <node pkg="ff" name="ff_node_service" type="ff_node_service" output="screen" respawn="true"/>
+
+
+</launch>

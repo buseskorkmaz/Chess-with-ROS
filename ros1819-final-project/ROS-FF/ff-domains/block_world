@@ -1,0 +1,40 @@
+(define (problem blocksworld)
+
+(:domain blocksworld)
+
+(:objects 
+
+objA objB objC objD
+)
+
+(:init
+
+(arm-empty)
+(clear objA)
+(on-table objA)
+
+(clear objB)
+(on-table objB)
+
+(clear objC)
+(on-table objC)
+
+(on-table objD)
+(clear objD)
+
+
+)
+
+(:goal
+(or
+
+;(and (on-shelf objB)
+;(on-shelf objA))
+
+(and (on objB objA) )
+;(on objC objB) )
+)
+)
+)
+
+

@@ -1,0 +1,13 @@
+string[] objPath
+int16 id
+int16 kid
+string[] frame_id
+string[] name
+geometry_msgs/Pose pose
+float64 scale_x
+float64 scale_y
+float64 scale_z
+float64 r
+float64 g
+float64 b
+bool use_embedded_materials
